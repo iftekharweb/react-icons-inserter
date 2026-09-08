@@ -97,6 +97,8 @@ Everything unticked here is prepared already; the first three are yours.
 - [x] `repository`, `homepage`, `bugs` set.
 - [x] `icon` — 128×128 PNG at `media/icon.png`, regenerate with
       `npm run generate-branding`.
+- [x] README images — absolute `raw.githubusercontent.com` URLs, regenerate with
+      `npm run generate-screenshots`.
 - [x] `galleryBanner` colour matches the icon background.
 - [x] `categories` are real Marketplace categories (`Snippets`, `Other`).
 - [x] `extensionKind: ["workspace"]` — the extension is Node-based and resolves
@@ -134,9 +136,17 @@ exact procedure in [Licensing](./licensing.md).
 | Q&A tab | `qna: "marketplace"` |
 
 Relative links in the README resolve against `repository`. Images need absolute
-URLs, or `vsce package --baseImagesUrl`. This README currently has no images —
-add screenshots of the grid picker and hover before the listing goes live if you
-want the page to sell the extension.
+URLs, or `vsce package --baseImagesUrl` — the README's two picker images already
+use `raw.githubusercontent.com`, so they render on the listing without shipping
+inside the `.vsix`.
+
+Those images are **generated, not captured**: `npm run generate-screenshots`
+composes them from `media/picker.css`'s metrics, VS Code Dark Modern's palette
+and real `IconIndex` results. That keeps them from drifting when the picker
+changes, and it is why they can be regenerated in CI. They are accurate to the
+layout but not to VS Code's own font rasterisation or window chrome — swap in
+real captures if you want the listing to show the genuine article. A hover
+preview image is still missing.
 
 ## After publishing
 

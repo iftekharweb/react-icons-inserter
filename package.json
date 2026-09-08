@@ -175,7 +175,8 @@
     "generate-index": "tsx scripts/generate-icon-index.ts",
     "package": "vsce package",
     "test": "tsx test/run.ts",
-    "generate-branding": "tsx scripts/generate-branding.ts"
+    "generate-branding": "tsx scripts/generate-branding.ts",
+    "generate-screenshots": "tsx scripts/generate-screenshots.ts"
   },
   "dependencies": {
     "fuse.js": "^7.0.0",

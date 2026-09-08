@@ -21,3 +21,5 @@ tsconfig.json
 **/*.ts
 **/*.map
 media/icon.svg
+# README references these by absolute URL, so they need not ship.
+media/screenshot-*.png

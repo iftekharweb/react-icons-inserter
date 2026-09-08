@@ -5,6 +5,8 @@ Search, preview and insert any of the **50,939 icons** from
 React files — with imports routed through a single, centralised barrel file
 instead of scattered `react-icons/*` imports.
 
+![The grid picker, searching for "arrow"](https://raw.githubusercontent.com/iftekharweb/react-icons-inserter/main/media/screenshot-grid.png)
+
 ---
 
 ## Documentation
@@ -42,6 +44,11 @@ Two styles, set by `reactIcons.pickerStyle`:
   slider. For browsing by shape. Fully keyboard-driven: arrows move, `Enter`
   inserts, `Escape` closes, typing anything jumps back to the search box.
 - **List** — the native QuickPick. Faster when you already know the name.
+
+The slider reflows the grid live, so you can trade density for legibility:
+
+![The grid picker at 64 px, searching for "home"](https://raw.githubusercontent.com/iftekharweb/react-icons-inserter/main/media/screenshot-grid-large.png)
+
 
 Type a fuzzy query either way:
 

@@ -74,6 +74,11 @@ text and return text or offsets. No VS Code calls, no I/O. That is what makes
 them testable and what keeps `insertIcon` the only place that talks to the
 workspace.
 
+**Regenerate the README images after changing `picker.css`.**
+`npm run generate-screenshots` rebuilds them from that file's metrics and real
+index results, so the README cannot quietly drift from the UI. They are
+renderings, not captures — see [Publishing](./publishing.md#what-the-marketplace-shows).
+
 **Comments explain decisions, not mechanics.** The reason a thing is done the
 awkward way is the part a reader cannot recover from the code.
 
@@ -133,6 +138,7 @@ media/                  grid picker webview assets (css + js), shipped as-is
 scripts/
   generate-icon-index.ts   build-time index generator
   generate-branding.ts     Marketplace icon (media/icon.png)
+  generate-screenshots.ts  README picker images (media/screenshot-*.png)
 test/
   run.ts                   the suite
   vscodeStub.ts            in-memory `vscode` + fake filesystem
