@@ -5,6 +5,27 @@ All notable changes to **React Icons Inserter** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Grid picker**, now the default. A webview panel showing rendered icons at
+  16–96 px in a reflowing grid, with a live size slider. `QuickPick` cannot do
+  this — it is a fixed single-column list and `iconPath` renders at ~16 px
+  regardless of the SVG — so browsing by shape needed a surface the extension
+  controls.
+- `reactIcons.pickerStyle` (`grid` | `list`, default `grid`) to choose between
+  the new grid and the original QuickPick, which stays because it is faster
+  when you already know the icon's name.
+- `reactIcons.gridIconSize` (16–96, default 32). The picker's slider writes back
+  to it globally.
+
+### Fixed
+
+- `.vscodeignore` shipped `.map` files. `vsce` applies `!` negations after all
+  ignore rules, so a broad `!dist/**` was overriding `**/*.map`. The file now
+  lists exclusions only.
+
 ## [0.1.0] — 2026-09-08
 
 First release.

@@ -104,6 +104,26 @@
           "maximum": 200,
           "description": "Maximum number of icons shown in the QuickPick at once."
         },
+        "reactIcons.pickerStyle": {
+          "type": "string",
+          "enum": [
+            "grid",
+            "list"
+          ],
+          "enumDescriptions": [
+            "Grid of rendered icons in a panel. Best for browsing by shape.",
+            "Native QuickPick list. Fastest when you already know the icon name."
+          ],
+          "default": "grid",
+          "description": "How the icon picker is presented."
+        },
+        "reactIcons.gridIconSize": {
+          "type": "number",
+          "default": 32,
+          "minimum": 16,
+          "maximum": 96,
+          "description": "Rendered icon size (px) in the grid picker. The slider in the picker updates this."
+        },
         "reactIcons.searchDebounceMs": {
           "type": "number",
           "default": 120,

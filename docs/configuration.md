@@ -23,11 +23,15 @@ the next insert.
 
 ### Picker
 
+See [Pickers](./pickers.md) for how the two differ and why both exist.
+
 | Setting | Type | Default | Effect |
 |---|---|---|---|
-| `reactIcons.maxResults` | number (10–200) | `50` | Results per page. **Show more** multiplies by 4; typing resets to this. |
+| `reactIcons.pickerStyle` | `grid` \| `list` | `grid` | `grid` opens a webview panel of rendered icons; `list` uses the native QuickPick. |
+| `reactIcons.gridIconSize` | number (16–96) | `32` | Rendered icon size in the grid picker. The picker's slider writes back to this, globally. |
+| `reactIcons.maxResults` | number (10–200) | `50` | Results per page **in the list picker**. The grid uses a fixed page of 120. **Show more** / **Load more** multiplies by 4; typing resets. |
 | `reactIcons.searchDebounceMs` | number (0–1000) | `120` | Delay before a search runs. `0` searches on every keystroke — see [Search](./search.md) for what that costs. |
-| `reactIcons.enableQuickPickPreviews` | boolean | `true` | The second, asynchronous pass that attaches SVG previews. Turning it off skips all set loading during search. |
+| `reactIcons.enableQuickPickPreviews` | boolean | `true` | The list picker's second, asynchronous pass that attaches SVG previews. No effect on the grid, which always renders icons. |
 
 ### Hover
 

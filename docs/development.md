@@ -42,9 +42,13 @@ The automated suite covers the text-producing logic. These need a real host:
 
 - [ ] Context menu shows in `.tsx`; hidden in a plain `.ts` with no React.
 - [ ] `Ctrl+Alt+I` bound and working.
-- [ ] QuickPick previews render (they depend on VS Code honouring `data:` URIs
-      in `iconPath` — the one thing the stub cannot verify).
-- [ ] **Show more** widens the result list.
+- [ ] **Grid picker**: icons render; the size slider reflows the grid and the
+      value survives reopening; arrows/`Enter`/`Escape` all work; typing while
+      the grid has focus returns to the search box; **Load more** widens.
+- [ ] **List picker** (`reactIcons.pickerStyle: "list"`): previews render — they
+      depend on VS Code honouring `data:` URIs in `iconPath`, the one thing the
+      stub cannot verify — and **Show more** widens.
+- [ ] Both pickers in a light and a dark theme.
 - [ ] Hover image renders in both a light and a dark theme.
 - [ ] **Change icon** swaps the tag and keeps props.
 - [ ] Insert into a file that is unsaved/dirty.
@@ -124,6 +128,7 @@ Expected package: 41 files, ~12 MB.
 
 ```
 src/                    extension source (see Architecture)
+media/                  grid picker webview assets (css + js), shipped as-is
 scripts/
   generate-icon-index.ts   build-time index generator
 test/

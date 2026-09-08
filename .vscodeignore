@@ -1,3 +1,7 @@
+# vsce applies negations (!) after all ignores, so a broad "!dist/**" would
+# override the *.map rule below. Only list exclusions here; everything not
+# named is packaged.
+
 .vscode/**
 .vscode-test/**
 node_modules/**
@@ -7,17 +11,12 @@ scripts/**
 test/**
 docs/**
 prompts/**
+
 esbuild.js
 tsconfig.json
 .gitignore
 .gitattributes
 .eslintrc*
-**/*.map
-**/*.ts
 
-!assets/icon-index/**
-!dist/**
-!README.md
-!LICENSE
-!ICON-LICENSES.md
-!CHANGELOG.md
+**/*.ts
+**/*.map

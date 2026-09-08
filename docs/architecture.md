@@ -6,7 +6,8 @@ Arrows point from importer to imported. Nothing here is circular — that
 constraint is why `astProject` and `dependencyCheck` exist as separate files.
 
 ```
-extension.ts ──┬──> quickPick.ts ──────> iconIndex.ts
+extension.ts ──┬──> gridPicker.ts ─────> iconIndex.ts      (webview, default)
+               ├──> quickPick.ts ──────> iconIndex.ts      (QuickPick)
                ├──> importManager.ts ──┬─> barrelFile.ts ──> astProject.ts
                │                       ├─> dependencyCheck.ts
                │                       └─> astProject.ts
@@ -26,7 +27,9 @@ The dotted edge is deliberate and is the only non-static link in the graph. See
 |---|---:|---|
 | `src/extension.ts` | 153 | Activation, command registration, the `reactIcons.isReactFile` context key, hover registration. |
 | `src/iconIndex.ts` | 360 | Loading the static index, tiered search, lazy per-set SVG loading, data-URI cache. |
-| `src/quickPick.ts` | 177 | Picker UI: debounce, cancellation, two-pass preview rendering, paging. |
+| `src/gridPicker.ts` | 246 | Grid picker: webview panel, message protocol, per-page SVG delivery. |
+| `src/quickPick.ts` | 177 | List picker: debounce, cancellation, two-pass preview rendering, paging. |
+| `media/picker.{css,js}` | 320 | Grid webview presentation and input. No searching happens here. |
 | `src/barrelFile.ts` | 279 | Locating/creating the barrel, planning its new contents, collision aliasing, relative specifiers. |
 | `src/importManager.ts` | 287 | Named-import merging, and assembling the one `WorkspaceEdit` that spans both files. |
 | `src/hoverProvider.ts` | 202 | Hover previews, gated on a three-step import verification. |
@@ -66,7 +69,20 @@ hovers dead until the user invoked the picker once.
 1  extension.ts        runInsert()
                        └─ needs an active editor, else warns and stops
 
-2  quickPick.ts        pickIcon(index, scope)
+2  extension.ts        choosePicker()  <- reactIcons.pickerStyle
+
+2a gridPicker.ts       pickIconGrid(index, scope, extensionUri)   [default]
+                       ├─ createWebviewPanel, load media/picker.{css,js}
+                       ├─ webview 'ready'  -> host posts 'init' (size, page, debounce)
+                       ├─ webview debounces input, posts 'search' + requestId
+                       │    ├─ index.load()  first call only, ~30 ms
+                       │    ├─ index.search(query, limit)
+                       │    ├─ index.getSvg() per result  (loads that set once)
+                       │    └─ host posts 'results' -> webview renders the grid
+                       │       stale requestIds are dropped on arrival
+                       └─ webview 'pick' -> resolveByName() -> one IconRef
+
+2b quickPick.ts        pickIcon(index, scope)                     [pickerStyle: list]
                        ├─ show the QuickPick immediately, busy = true
                        ├─ index.load()            first call only, ~30 ms
                        ├─ onDidChangeValue -> debounce 120 ms -> runSearch()

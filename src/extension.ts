@@ -1,8 +1,9 @@
 import * as vscode from 'vscode';
 import { disposeProject } from './astProject';
 import { IconHoverProvider } from './hoverProvider';
-import { IconIndex } from './iconIndex';
+import { IconIndex, type IconRef } from './iconIndex';
 import { insertIcon } from './importManager';
+import { pickIconGrid } from './gridPicker';
 import { pickIcon } from './quickPick';
 
 const REACT_LANGUAGES = ['javascript', 'javascriptreact', 'typescript', 'typescriptreact'];
@@ -28,6 +29,7 @@ let index: IconIndex | undefined;
 export function activate(context: vscode.ExtensionContext): void {
   index = new IconIndex(context.extensionPath);
   const iconIndex = index;
+  const extensionUri = context.extensionUri;
 
   const selector = REACT_LANGUAGES.map((language) => ({ language, scheme: 'file' }));
   context.subscriptions.push(
@@ -35,11 +37,11 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('reactIcons.insert', () => runInsert(iconIndex)),
+    vscode.commands.registerCommand('reactIcons.insert', () => runInsert(iconIndex, extensionUri)),
     vscode.commands.registerCommand(
       'reactIcons.replaceAtCursor',
       (uri?: string, line?: number, character?: number) =>
-        runReplace(iconIndex, uri, line, character),
+        runReplace(iconIndex, extensionUri, uri, line, character),
     ),
   );
 
@@ -96,13 +98,32 @@ export function isReactFile(document: vscode.TextDocument | undefined): boolean 
   return REACT_HINT.test(head);
 }
 
-async function runInsert(iconIndex: IconIndex): Promise<void> {
+/**
+ * Route to whichever picker the user configured. The grid is a webview panel
+ * (see gridPicker.ts for why a QuickPick cannot render one); the list is the
+ * native QuickPick, which stays available because it is faster for anyone who
+ * already knows the icon's name.
+ */
+function choosePicker(
+  iconIndex: IconIndex,
+  scope: vscode.Uri,
+  extensionUri: vscode.Uri,
+): Thenable<IconRef | undefined> {
+  const style = vscode.workspace
+    .getConfiguration('reactIcons', scope)
+    .get<'grid' | 'list'>('pickerStyle', 'grid');
+  return style === 'list'
+    ? pickIcon(iconIndex, scope)
+    : pickIconGrid(iconIndex, scope, extensionUri);
+}
+
+async function runInsert(iconIndex: IconIndex, extensionUri: vscode.Uri): Promise<void> {
   const editor = vscode.window.activeTextEditor;
   if (!editor) {
     void vscode.window.showWarningMessage('Open a React file first.');
     return;
   }
-  const icon = await pickIcon(iconIndex, editor.document.uri);
+  const icon = await choosePicker(iconIndex, editor.document.uri, extensionUri);
   if (!icon) {
     return;
   }
@@ -117,6 +138,7 @@ async function runInsert(iconIndex: IconIndex): Promise<void> {
 /** Hover's "Change icon" link: swap the identifier at the given position. */
 async function runReplace(
   iconIndex: IconIndex,
+  extensionUri: vscode.Uri,
   uriString?: string,
   line?: number,
   character?: number,
@@ -141,7 +163,7 @@ async function runReplace(
     return;
   }
 
-  const icon = await pickIcon(iconIndex, editor.document.uri);
+  const icon = await choosePicker(iconIndex, editor.document.uri, extensionUri);
   if (!icon) {
     return;
   }

@@ -10,6 +10,7 @@ is the user-facing pitch; these pages are for people changing the code.
 | [Architecture](./architecture.md) | You need the module graph, the data flow of one insert, or the activation lifecycle. |
 | [Icon index](./icon-index.md) | You are touching the generator, the on-disk JSON format, or how sets are loaded. |
 | [Search](./search.md) | You are changing ranking or query handling. |
+| [Pickers](./pickers.md) | You are changing the grid webview or the QuickPick. |
 | [Barrel file](./barrel-file.md) | You are changing where the barrel lives, what it contains, or how collisions resolve. |
 | [Imports & edits](./imports-and-edits.md) | You are touching `ts-morph`, the `WorkspaceEdit`, or anything about atomicity and undo. |
 | [Hover](./hover.md) | You are changing the hover, its verification chain, or its caching. |
@@ -23,7 +24,8 @@ is the user-facing pitch; these pages are for people changing the code.
 ## The one-paragraph version
 
 The extension ships a pre-baked index of every `react-icons` icon (50,939 icons,
-31 sets) as static JSON. A QuickPick searches it. Choosing an icon writes three
+31 sets) as static JSON. A picker searches it — a grid webview by default, or
+the native QuickPick. Choosing an icon writes three
 things in a single `WorkspaceEdit`: the JSX at the caret, a named import in the
 active file, and a re-export in a central barrel file at
 `<workspace>/icons/react-icons.{ts,js}`. Components never import

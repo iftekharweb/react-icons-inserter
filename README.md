@@ -16,6 +16,7 @@ Deeper docs live in [`docs/`](./docs/):
 | [Architecture](./docs/architecture.md) | Module graph, activation lifecycle, the data flow of one insert and one hover. |
 | [Icon index](./docs/icon-index.md) | The generator, the on-disk JSON format, lazy per-set loading. |
 | [Search](./docs/search.md) | The two-stage ranking algorithm and the Fuse benchmarks behind it. |
+| [Pickers](./docs/pickers.md) | Grid vs list, the webview message protocol, keyboard map. |
 | [Barrel file](./docs/barrel-file.md) | Location, language detection, sorting, collision aliasing, edge cases. |
 | [Imports & edits](./docs/imports-and-edits.md) | ts-morph usage, the single WorkspaceEdit, atomicity and undo. |
 | [Hover](./docs/hover.md) | The import-verification chain and markdown rendering. |
@@ -33,7 +34,16 @@ Deeper docs live in [`docs/`](./docs/):
 ### Searchable icon picker
 
 `Ctrl+Alt+I` (`Cmd+Alt+I` on macOS), right-click → **Insert React Icon**, or the
-Command Palette. Type a fuzzy query and pick an icon:
+Command Palette.
+
+Two styles, set by `reactIcons.pickerStyle`:
+
+- **Grid** (default) — a panel of rendered icons at 16–96 px with a live size
+  slider. For browsing by shape. Fully keyboard-driven: arrows move, `Enter`
+  inserts, `Escape` closes, typing anything jumps back to the search box.
+- **List** — the native QuickPick. Faster when you already know the name.
+
+Type a fuzzy query either way:
 
 ```
 beer          -> BiBeer, FaBeer, IoBeer, LuBeer, TbBeer …
@@ -43,7 +53,8 @@ FaBeer        -> FaBeer   (paste a full name and it ranks first)
 ```
 
 Results show the icon name, its set (Font Awesome 5, Feather, Material Design,
-…) and a rendered SVG preview. 50 results at a time, with **Show more** to widen.
+…) and a rendered SVG preview — 120 at a time in the grid, 50 in the list, with
+**Load more** to widen.
 
 The right-click entry appears only in files that actually look like React:
 `.jsx`/`.tsx` always, `.js`/`.ts` only when the file imports React or contains
@@ -127,7 +138,9 @@ is missing from your `package.json`, you get a one-time prompt offering to run
 | `reactIcons.barrelDirectory` | `icons` | Workspace-relative barrel folder. |
 | `reactIcons.barrelFileName` | `react-icons` | Barrel base name, no extension. |
 | `reactIcons.language` | `auto` | `auto` / `ts` / `js` for a newly created barrel. |
-| `reactIcons.maxResults` | `50` | Results shown per page in the picker. |
+| `reactIcons.pickerStyle` | `grid` | `grid` (webview panel) or `list` (QuickPick). |
+| `reactIcons.gridIconSize` | `32` | Icon size in px for the grid picker, 16–96. |
+| `reactIcons.maxResults` | `50` | Results per page in the list picker. |
 | `reactIcons.searchDebounceMs` | `120` | Debounce before a search runs. |
 | `reactIcons.enableQuickPickPreviews` | `true` | SVG previews in the picker. |
 | `reactIcons.enableHoverPreview` | `true` | Hover previews. |
@@ -329,7 +342,9 @@ Mentioned so you know they were considered, not overlooked:
 ```
 src/extension.ts        activation, commands, context key, hover registration
 src/iconIndex.ts        index loading, tiered search, lazy SVG + data URI cache
-src/quickPick.ts        picker UI, debounce, cancellation, two-pass previews
+src/gridPicker.ts       grid picker webview: panel, protocol, per-page SVG
+src/quickPick.ts        list picker: debounce, cancellation, two-pass previews
+media/picker.{css,js}   grid webview presentation and input
 src/barrelFile.ts       barrel location/creation, re-exports, collisions, paths
 src/importManager.ts    import merging + the single WorkspaceEdit
 src/hoverProvider.ts    import-verified hover previews
