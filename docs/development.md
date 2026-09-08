@@ -113,7 +113,8 @@ npm test               # 23 assertions
 npm run package        # runs vscode:prepublish -> generate-index && build
 ```
 
-Then, before publishing:
+Publishing to the Marketplace is covered separately in
+[Publishing](./publishing.md). Before either:
 
 - [ ] Bump `version` in `package.json`.
 - [ ] Regenerate `ICON-LICENSES.md` if `react-icons` changed
@@ -122,7 +123,7 @@ Then, before publishing:
 - [ ] Read [Licensing](./licensing.md). The artwork is not MIT.
 - [ ] Sanity-check the `.vsix` contents: `npx vsce ls`.
 
-Expected package: 41 files, ~12 MB.
+Expected package: 44 files, ~12 MB.
 
 ## Repository layout
 
@@ -131,6 +132,7 @@ src/                    extension source (see Architecture)
 media/                  grid picker webview assets (css + js), shipped as-is
 scripts/
   generate-icon-index.ts   build-time index generator
+  generate-branding.ts     Marketplace icon (media/icon.png)
 test/
   run.ts                   the suite
   vscodeStub.ts            in-memory `vscode` + fake filesystem

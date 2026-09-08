@@ -113,5 +113,6 @@ never `onStartupFinished`. See [Performance](./performance.md#activation).
 | `npm run watch` | Rebuild on save, with sourcemaps. |
 | `npm run compile` | `tsc --noEmit` over `src/`, `scripts/`, `test/`. |
 | `npm test` | The suite — see [Testing](./testing.md). |
-| `npm run package` | `vsce package`. |
+| `npm run generate-branding` | Regenerates `media/icon.png` from the icon index. |
+| `npm run package` | `vsce package`. See [Publishing](./publishing.md). |
 | `vscode:prepublish` | `generate-index && build`, so a fresh clone cannot ship a missing index. |

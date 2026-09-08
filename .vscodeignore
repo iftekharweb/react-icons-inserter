@@ -20,3 +20,4 @@ tsconfig.json
 
 **/*.ts
 **/*.map
+media/icon.svg

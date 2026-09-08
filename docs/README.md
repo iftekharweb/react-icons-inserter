@@ -19,6 +19,7 @@ is the user-facing pitch; these pages are for people changing the code.
 | [Development](./development.md) | You are setting up, building, testing, or releasing. |
 | [Testing](./testing.md) | You are adding tests or wondering why there is no Extension Host. |
 | [Troubleshooting](./troubleshooting.md) | Something does not work and you want the likely cause. |
+| [Publishing](./publishing.md) | You are shipping to the Marketplace. |
 | [Licensing](./licensing.md) | You are about to publish, or thinking about adding/removing an icon set. |
 
 ## The one-paragraph version

@@ -5,7 +5,7 @@ All notable changes to **React Icons Inserter** are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.0] — 2026-09-08
 
 ### Added
 
@@ -25,6 +25,18 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - `.vscodeignore` shipped `.map` files. `vsce` applies `!` negations after all
   ignore rules, so a broad `!dist/**` was overriding `**/*.map`. The file now
   lists exclusions only.
+
+### Packaging
+
+- Marketplace metadata: `icon` (128×128, generated from the index itself by
+  `npm run generate-branding`), `galleryBanner`, `homepage`, `qna`.
+- `categories` corrected to `Snippets` / `Other`. `Programming Languages` is for
+  language support, which this is not.
+- `extensionKind: ["workspace"]` — the extension is Node-based and resolves
+  workspace files by `fsPath`, so it must run where the files are rather than on
+  the UI side of a remote session.
+- README gained an **Attribution** section, which is what satisfies CC BY 4.0
+  for the bundled Font Awesome artwork on the Marketplace listing.
 
 ## [0.1.0] — 2026-09-08
 
@@ -100,4 +112,5 @@ required) and MPL-2.0 for Circum Icons. See
 Icon colour/size customisation UI, non-React frameworks, multi-icon batch
 insert, telemetry.
 
+[0.2.0]: https://github.com/iftekharweb/react-icons-inserter/releases/tag/v0.2.0
 [0.1.0]: https://github.com/iftekharweb/react-icons-inserter/releases/tag/v0.1.0

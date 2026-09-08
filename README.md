@@ -310,19 +310,31 @@ Other limits worth knowing:
 
 ---
 
-## Icon licensing
+## Attribution
 
-**Read [ICON-LICENSES.md](./ICON-LICENSES.md) before publishing.**
+This extension bundles pre-rendered SVG data for **50,939 icons across 31 sets**,
+sourced from [`react-icons`](https://react-icons.github.io/react-icons/) (MIT).
+The artwork belongs to its original authors and is redistributed here under each
+set's own license. Icon path data is unmodified; only the wrapper `<svg>`
+attributes (`viewBox`, `width`, `height`, `fill`, `stroke`) are set at render
+time.
 
-`react-icons` is MIT, but the artwork is not: this extension redistributes
-pre-rendered SVG path data for all 31 sets, and each set carries its own terms.
-Notably Font Awesome 5/6 are **CC BY 4.0** (visible attribution required) and
-Circum Icons is **MPL-2.0** (file-level copyleft). The generator does not modify
-path data — only the wrapper `<svg>` attributes — but redistribution terms still
-apply. Dropping a set from the generator removes it from both the index and the
-bundle.
+Sets with terms beyond a plain permissive grant:
 
-The extension's own source is MIT ([LICENSE](./LICENSE)).
+- **Font Awesome 5 & 6** — <https://fontawesome.com> — icons licensed under
+  [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). 3,669 icons.
+- **Circum Icons** — <https://circumicons.com> — licensed under
+  [MPL-2.0](https://github.com/Klarr-Agency/Circum-Icons/blob/main/LICENSE).
+  288 icons.
+
+The remaining sets are MIT or equivalent. Per-set names, counts, licenses and
+links are in **[ICON-LICENSES.md](./ICON-LICENSES.md)**.
+
+The extension's own source code is MIT ([LICENSE](./LICENSE)). The MIT license
+covers the code only — not the bundled artwork.
+
+Maintainers: see [docs/licensing.md](./docs/licensing.md) before adding,
+removing, or upgrading an icon set.
 
 ---
 
