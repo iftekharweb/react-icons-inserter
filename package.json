@@ -2,7 +2,7 @@
   "name": "react-icons-inserter",
   "displayName": "React Icons Inserter",
   "description": "Search, preview and insert react-icons into React files with a centralized icon barrel file and hover previews.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "repository": {
     "type": "git",
