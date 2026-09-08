@@ -123,6 +123,8 @@ Hovering an icon shows a large rendered preview, its set, its `react-icons`
 source module, the barrel path it came from, and a **Change icon** link that
 reopens the picker to swap it in place (props on the element are preserved).
 
+![Hovering FaBeer shows its preview, set and barrel path](https://raw.githubusercontent.com/iftekharweb/react-icons-inserter/main/media/screenshot-hover.png)
+
 The hover deliberately does *not* pattern-match capitalised words. It fires only
 when the identifier is a named import in that file, **and** that import resolves
 on disk to the barrel, **and** the barrel re-exports it from `react-icons/*`.

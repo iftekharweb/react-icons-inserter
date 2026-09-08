@@ -97,7 +97,8 @@ Everything unticked here is prepared already; the first three are yours.
 - [x] `repository`, `homepage`, `bugs` set.
 - [x] `icon` — 128×128 PNG at `media/icon.png`, regenerate with
       `npm run generate-branding`.
-- [x] README images — absolute `raw.githubusercontent.com` URLs, regenerate with
+- [x] README images — grid, grid at 64 px, and hover. Absolute
+      `raw.githubusercontent.com` URLs, regenerate with
       `npm run generate-screenshots`.
 - [x] `galleryBanner` colour matches the icon background.
 - [x] `categories` are real Marketplace categories (`Snippets`, `Other`).
@@ -145,8 +146,11 @@ composes them from `media/picker.css`'s metrics, VS Code Dark Modern's palette
 and real `IconIndex` results. That keeps them from drifting when the picker
 changes, and it is why they can be regenerated in CI. They are accurate to the
 layout but not to VS Code's own font rasterisation or window chrome — swap in
-real captures if you want the listing to show the genuine article. A hover
-preview image is still missing.
+real captures if you want the listing to show the genuine article.
+
+The hover image goes further: the generator drives the real
+`IconHoverProvider` through the test suite's `vscode` stub and renders the
+`MarkdownString` it returned, so its text is produced by the shipping code.
 
 ## After publishing
 
