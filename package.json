@@ -1,0 +1,165 @@
+{
+  "name": "react-icons-inserter",
+  "displayName": "React Icons Inserter",
+  "description": "Search, preview and insert react-icons into React files with a centralized icon barrel file and hover previews.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iftekharweb/react-icons-inserter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/iftekharweb/react-icons-inserter/issues"
+  },
+  "publisher": "react-icons-inserter",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "react",
+    "react-icons",
+    "icons",
+    "jsx",
+    "tsx"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:javascriptreact",
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "reactIcons.insert",
+        "title": "Insert React Icon",
+        "category": "React Icons"
+      },
+      {
+        "command": "reactIcons.replaceAtCursor",
+        "title": "Change React Icon At Cursor",
+        "category": "React Icons"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "reactIcons.insert",
+          "when": "reactIcons.isReactFile",
+          "group": "1_modification@100"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "reactIcons.insert",
+          "when": "editorLangId =~ /^(javascript|javascriptreact|typescript|typescriptreact)$/"
+        },
+        {
+          "command": "reactIcons.replaceAtCursor",
+          "when": "editorLangId =~ /^(javascript|javascriptreact|typescript|typescriptreact)$/"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "reactIcons.insert",
+        "key": "ctrl+alt+i",
+        "mac": "cmd+alt+i",
+        "when": "editorTextFocus && reactIcons.isReactFile"
+      }
+    ],
+    "configuration": {
+      "title": "React Icons Inserter",
+      "properties": {
+        "reactIcons.barrelDirectory": {
+          "type": "string",
+          "default": "icons",
+          "description": "Workspace-relative directory that holds the generated react-icons barrel file."
+        },
+        "reactIcons.barrelFileName": {
+          "type": "string",
+          "default": "react-icons",
+          "description": "Base name (without extension) of the generated barrel file."
+        },
+        "reactIcons.language": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "ts",
+            "js"
+          ],
+          "default": "auto",
+          "description": "Language used when creating the barrel file. 'auto' detects tsconfig.json or the active file extension."
+        },
+        "reactIcons.maxResults": {
+          "type": "number",
+          "default": 50,
+          "minimum": 10,
+          "maximum": 200,
+          "description": "Maximum number of icons shown in the QuickPick at once."
+        },
+        "reactIcons.searchDebounceMs": {
+          "type": "number",
+          "default": 120,
+          "minimum": 0,
+          "maximum": 1000,
+          "description": "Debounce delay (ms) applied to QuickPick search input."
+        },
+        "reactIcons.enableQuickPickPreviews": {
+          "type": "boolean",
+          "default": true,
+          "description": "Render an SVG preview next to each QuickPick result. Disable on slow machines."
+        },
+        "reactIcons.enableHoverPreview": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show an icon preview when hovering an icon imported from the barrel file."
+        },
+        "reactIcons.checkReactIconsDependency": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn when react-icons is missing from the workspace package.json dependencies."
+        },
+        "reactIcons.sortBarrelExports": {
+          "type": "string",
+          "enum": [
+            "name",
+            "set"
+          ],
+          "default": "set",
+          "description": "Sort barrel re-exports alphabetically by icon name, or grouped by source set then name."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run generate-index && npm run build",
+    "build": "node esbuild.js --production",
+    "watch": "node esbuild.js --watch",
+    "compile": "tsc -p ./ --noEmit",
+    "generate-index": "tsx scripts/generate-icon-index.ts",
+    "package": "vsce package",
+    "test": "tsx test/run.ts"
+  },
+  "dependencies": {
+    "fuse.js": "^7.0.0",
+    "ts-morph": "^23.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.24.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-icons": "^5.4.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}

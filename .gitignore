@@ -1,0 +1,8 @@
+node_modules/
+dist/
+out/
+*.vsix
+.vscode-test/
+
+# 33 MB of generated SVG data -- rebuild with `npm run generate-index`
+assets/icon-index/

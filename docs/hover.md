@@ -1,0 +1,131 @@
+# Hover previews
+
+`src/hoverProvider.ts`. Registered for `javascript`, `javascriptreact`,
+`typescript`, `typescriptreact` with `scheme: 'file'`.
+
+## The verification chain
+
+The obvious implementation — match any capitalised identifier against the icon
+name list — produces constant false positives. Real projects have components
+called `Home`, `Menu`, `Search`, `Link`, `Image`. All of those are also icon
+names.
+
+So a hover renders only when every one of these holds:
+
+```
+1  reactIcons.enableHoverPreview is on
+2  the word at the cursor is >= 3 chars and starts uppercase
+3  a barrel file exists for this workspace
+4  the word is a NAMED IMPORT in this file, and that import's specifier
+   RESOLVES ON DISK to the barrel
+5  the barrel re-exports that name from a react-icons/<set> path
+6  the index has that (name, set) pair
+```
+
+Steps 4 and 5 are the point. Step 4 proves the symbol came from the barrel;
+step 5 proves the barrel got it from `react-icons` and recovers which set. Your
+own `Home` component fails at step 4 and costs one regex plus one cached map
+lookup.
+
+Steps 2 and 3 are pure cost control — they bail before any parsing, so hovering
+ordinary code is nearly free.
+
+## Aliases resolve
+
+Step 5 also un-aliases. Given the collision output:
+
+```ts
+export { FaAddressBook as FaAddressBookFa6 } from 'react-icons/fa6';
+```
+
+hovering `FaAddressBookFa6` looks up the *exported* name, gets back
+`{ originalName: 'FaAddressBook', modulePath: 'react-icons/fa6' }`, and previews
+the correct Font Awesome 6 artwork. The hover header says:
+
+> **FaAddressBookFa6** · alias of `FaAddressBook`
+
+This is why the barrel is consulted rather than trusting the local name.
+
+## Caching
+
+Two parses in the worst case, both memoised on `${uri}|${version}`:
+
+| Cache | Contents |
+|---|---|
+| `importCache` | local import name → module specifier, for barrel imports only |
+| `barrelCache` | exported name → `{ originalName, modulePath }` |
+
+A document's `version` increments on every edit, so the key self-invalidates.
+Re-hovering an unedited file parses nothing. Each cache holds a single entry —
+hover traffic is overwhelmingly one file at a time, and a map keyed by URI would
+just retain parse results for closed documents.
+
+The SVG payload for the set is fetched through `IconIndex`, which caches per set
+and per rendered data URI for the session.
+
+## Rendering
+
+```ts
+const markdown = new vscode.MarkdownString();
+markdown.isTrusted = { enabledCommands: ['reactIcons.replaceAtCursor'] };
+markdown.supportThemeIcons = true;
+markdown.appendMarkdown(`![${icon.name}](${dataUri})\n\n`);
+```
+
+Three decisions here:
+
+**Markdown image syntax, not `<img>`.** A base64 `data:` URI in
+`![alt](uri)` form is the one thing VS Code's hover renderer accepts reliably
+across stable builds. An `<img>` tag needs `supportHtml` and is still sanitised
+in some configurations.
+
+**Size is baked into the SVG.** The `|width=`/`|height=` markdown hint is not
+universally honoured in hovers, so `getDataUri(icon, 56, colour)` writes
+`width="56" height="56"` into the SVG itself.
+
+**`isTrusted` is scoped to one command.** Never blanket `true`. The only command
+link in the content is:
+
+```
+[$(replace) Change icon](command:reactIcons.replaceAtCursor?%5B…%5D)
+```
+
+with the document URI, line and character URI-encoded as JSON arguments. The
+command re-checks that the URI matches the active editor before touching
+anything.
+
+## Theme colour
+
+VS Code renders hover images outside any theme CSS scope, so `currentColor` is
+useless. The literal is chosen from `window.activeColorTheme.kind`:
+
+| Theme kind | Colour |
+|---|---|
+| Light, HighContrastLight | `#3b3b3b` |
+| Dark, HighContrast | `#cccccc` |
+
+Both variants are generated and cached; only the matching one is emitted. A
+theme switch mid-session picks up the other from cache with no re-render cost.
+
+## Cancellation
+
+`token.isCancellationRequested` is checked after each await — after
+`locateBarrel`, after opening the barrel document, after `index.load()`. Hovers
+are cancelled aggressively by VS Code as the pointer moves, and the first hover
+of a session can take a set load (up to ~24 ms of `JSON.parse`).
+
+## Hovering inside the barrel
+
+Supported. When the active document *is* the barrel, step 4 is skipped — there
+are no imports to verify, and the export declarations themselves are the proof.
+Hovering `FaBeer` in the barrel previews it.
+
+## What is not implemented
+
+- **Hovering a JSX tag vs. the import statement.** Both work, because both are
+  identifier positions that resolve through the same import map.
+- **Non-file schemes.** The selector is `scheme: 'file'`. Untitled buffers and
+  virtual documents have no workspace-relative barrel to resolve against.
+- **Multi-root disambiguation.** `locateBarrel` uses the folder owning the
+  document, so each root gets its own barrel. Cross-root imports are not
+  resolved.
